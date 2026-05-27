@@ -96,6 +96,37 @@ app.withTypeProvider<ZodTypeProvider>().route({
     },
   });
 
+  const WeekDay = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"] as const;
+// Começa criando a rota para workout plans
+app.withTypeProvider<ZodTypeProvider>().route({
+  method: "POST",
+  url: "/workout-plans",
+  schema: {
+    body: z.object({
+      name: z.string().trim().min(1, {message: "Name is required" }),
+
+      workoutDays: z.array(
+        z.object({
+          name: z.string().trim().min(1), // exemplo: superiores
+          weekDay: z.enum(WeekDay), // usando nativeEnum para enums do TypeScript
+          isRest: z.boolean().default(false), // se é dia de descanso
+          estimatedDurationInSeconds: z.number().min(1),
+
+          exercises: z.array (
+            z.object({
+              name: z.string().trim().min(1),
+              order: z.number().min(0),
+              sets: z.number().min(1),
+              repts: z.number().min(1),
+              restTimeInSeconds: z.number().min(1),
+            }),
+          ),
+        }),
+      ),
+    }),
+  },
+});
+
 // Register authentication endpoint
 app.route({
   method: ["GET", "POST"],
