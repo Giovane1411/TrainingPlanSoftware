@@ -19,3 +19,5 @@ prisma/dev.db-journal
 Thumbs.db
 
 /bootcamp-treinos-api
+
+/src_preview
