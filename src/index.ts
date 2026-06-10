@@ -3,20 +3,22 @@ import "dotenv/config";
 
 import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
-//import fastifySwaggerUI from "@fastify/swagger-ui";
 import fastifyApiReference from "@scalar/fastify-api-reference";
-//import { fromNodeHeaders } from "better-auth/node";
 import Fastify from 'fastify';
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
 import z from "zod/v4";
 
 import { auth } from "./lib/auth.js";
+import { workoutPlanRoutes } from "./routes/workout-plan.js";
 
 
 
 const app = Fastify({
   logger: true,
 });
+
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
 
 await app.register(fastifySwagger, {
   openapi: {
@@ -34,9 +36,6 @@ await app.register(fastifySwagger, {
 });
 
  
-//await app.register(fastifySwaggerUI, {
-//  routePrefix: '/docs',
-//});
 
 await app.register(fastifyCors, {
   origin: ["http://localhost:3000"],
@@ -60,6 +59,11 @@ await app.register(fastifyApiReference, {
   },
 });
 
+//ROUTES
+
+await app.register(workoutPlanRoutes, {prefix: "/workout-plans"});
+//Controller zod faz isso, valida os tipos de dados. apenas isso. Regras de negocio vao no usecase
+
 app.withTypeProvider<ZodTypeProvider>().route({
   method: "GET",
   url: "/swagger.json",
@@ -71,9 +75,6 @@ app.withTypeProvider<ZodTypeProvider>().route({
   }
 });
 
-
-app.setValidatorCompiler(validatorCompiler);
-app.setSerializerCompiler(serializerCompiler);
 
 // Declare a route
 
@@ -95,37 +96,6 @@ app.withTypeProvider<ZodTypeProvider>().route({
         };
     },
   });
-
-  const WeekDay = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"] as const;
-// Começa criando a rota para workout plans
-app.withTypeProvider<ZodTypeProvider>().route({
-  method: "POST",
-  url: "/workout-plans",
-  schema: {
-    body: z.object({
-      name: z.string().trim().min(1, {message: "Name is required" }),
-
-      workoutDays: z.array(
-        z.object({
-          name: z.string().trim().min(1), // exemplo: superiores
-          weekDay: z.enum(WeekDay), // usando nativeEnum para enums do TypeScript
-          isRest: z.boolean().default(false), // se é dia de descanso
-          estimatedDurationInSeconds: z.number().min(1),
-
-          exercises: z.array (
-            z.object({
-              name: z.string().trim().min(1),
-              order: z.number().min(0),
-              sets: z.number().min(1),
-              repts: z.number().min(1),
-              restTimeInSeconds: z.number().min(1),
-            }),
-          ),
-        }),
-      ),
-    }),
-  },
-});
 
 // Register authentication endpoint
 app.route({

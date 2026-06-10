@@ -388,6 +388,7 @@ export const ModelName = {
   WorkoutPlan: 'WorkoutPlan',
   WorkoutDay: 'WorkoutDay',
   WorkoutExercise: 'WorkoutExercise',
+  WorkoutSession: 'WorkoutSession',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "workoutPlan" | "workoutDay" | "workoutExercise" | "session" | "account" | "verification"
+    modelProps: "user" | "workoutPlan" | "workoutDay" | "workoutExercise" | "workoutSession" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -706,6 +707,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WorkoutSession: {
+      payload: Prisma.$WorkoutSessionPayload<ExtArgs>
+      fields: Prisma.WorkoutSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkoutSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkoutSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.WorkoutSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkoutSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>
+        }
+        findMany: {
+          args: Prisma.WorkoutSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>[]
+        }
+        create: {
+          args: Prisma.WorkoutSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>
+        }
+        createMany: {
+          args: Prisma.WorkoutSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WorkoutSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.WorkoutSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>
+        }
+        update: {
+          args: Prisma.WorkoutSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkoutSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkoutSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WorkoutSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.WorkoutSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkoutSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.WorkoutSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkoutSession>
+        }
+        groupBy: {
+          args: Prisma.WorkoutSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkoutSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkoutSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkoutSessionCountAggregateOutputType> | number
+        }
+      }
+    }
     Session: {
       payload: Prisma.$SessionPayload<ExtArgs>
       fields: Prisma.SessionFieldRefs
@@ -974,7 +1049,11 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  weightInGrams: 'weightInGrams',
+  heightInCentimeters: 'heightInCentimeters',
+  age: 'age',
+  bodyFatPercentage: 'bodyFatPercentage'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -998,8 +1077,10 @@ export const WorkoutDayScalarFieldEnum = {
   workoutPlanId: 'workoutPlanId',
   isRest: 'isRest',
   weekDay: 'weekDay',
+  estimatedDurationInSeconds: 'estimatedDurationInSeconds',
+  coverImageUrl: 'coverImageUrl',
   createdAt: 'createdAt',
-  updateAt: 'updateAt'
+  updatedAt: 'updatedAt'
 } as const
 
 export type WorkoutDayScalarFieldEnum = (typeof WorkoutDayScalarFieldEnum)[keyof typeof WorkoutDayScalarFieldEnum]
@@ -1018,6 +1099,18 @@ export const WorkoutExerciseScalarFieldEnum = {
 } as const
 
 export type WorkoutExerciseScalarFieldEnum = (typeof WorkoutExerciseScalarFieldEnum)[keyof typeof WorkoutExerciseScalarFieldEnum]
+
+
+export const WorkoutSessionScalarFieldEnum = {
+  id: 'id',
+  workoutDayId: 'workoutDayId',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkoutSessionScalarFieldEnum = (typeof WorkoutSessionScalarFieldEnum)[keyof typeof WorkoutSessionScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {
@@ -1131,20 +1224,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'WeekDay'
- */
-export type EnumWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeekDay'>
-    
-
-
-/**
- * Reference to a field of type 'WeekDay[]'
- */
-export type ListEnumWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeekDay[]'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1155,6 +1234,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'WeekDay'
+ */
+export type EnumWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeekDay'>
+    
+
+
+/**
+ * Reference to a field of type 'WeekDay[]'
+ */
+export type ListEnumWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeekDay[]'>
     
 
 
@@ -1270,6 +1363,7 @@ export type GlobalOmitConfig = {
   workoutPlan?: Prisma.WorkoutPlanOmit
   workoutDay?: Prisma.WorkoutDayOmit
   workoutExercise?: Prisma.WorkoutExerciseOmit
+  workoutSession?: Prisma.WorkoutSessionOmit
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
