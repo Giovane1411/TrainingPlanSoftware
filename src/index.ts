@@ -9,6 +9,10 @@ import { jsonSchemaTransform, serializerCompiler, validatorCompiler, ZodTypeProv
 import z from "zod/v4";
 
 import { auth } from "./lib/auth.js";
+import { aiRoutes } from "./routes/ai.js";
+import { homeRoutes } from "./routes/home.js";
+import { statsRoutes } from "./routes/stats.js";
+import { userRoutes } from "./routes/user.js";
 import { workoutPlanRoutes } from "./routes/workout-plan.js";
 
 
@@ -62,6 +66,10 @@ await app.register(fastifyApiReference, {
 //ROUTES
 
 await app.register(workoutPlanRoutes, {prefix: "/workout-plans"});
+await app.register(userRoutes);
+await app.register(aiRoutes, {prefix: "/ai"});
+await app.register(homeRoutes, {prefix: "/home"});
+await app.register(statsRoutes, {prefix: "/stats"});
 //Controller zod faz isso, valida os tipos de dados. apenas isso. Regras de negocio vao no usecase
 
 app.withTypeProvider<ZodTypeProvider>().route({

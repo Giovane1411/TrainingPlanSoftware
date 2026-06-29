@@ -1,49 +1,165 @@
-// Este importe é a biblioteca Zod, que é usada para criar schemas de validação de dados. Ela permite definir regras para os dados e validar se os dados fornecidos atendem a regra.
-import z from 'zod/v4';
+import z from "zod/v4";
 
-import { WeekDay } from "../generated/prisma/enums.js"
+import { WeekDay } from "../generated/prisma/enums.js";
 
-// O objetivo deste schema é validar os dados relacionados a um exercício de treino.
+export const ErrorSchema = z.object({
+    error: z.string(),
+    code: z.string(),
+});
+
 export const WorkoutExerciseSchema = z.object({
-    name: z.string().trim().min(1), // O nome do exercício deve ser em string e é obrigatório.
-    order: z.number().int().min(0), // A ordem do exercício
-    sets: z.number().int().min(1), // O número de séries deve ser um número inteiro e no mínimo 1.
-    reps: z.number().int().min(1), // O número de repetição deve ser um número inteiro e no mínimo 1.
-    restTimeInSeconds: z.number().int().min(1) // O tempo de descanso entra as séries deve ser um número inteiro e no mínimo 1 segundo.   
-})
+  name: z.string().trim().min(1),
+  order: z.number().min(0),
+  sets: z.number().min(1),
+  reps: z.number().min(1),
+  restTimeInSeconds: z.number().min(1),
+});
 
 export const WorkoutDaySchema = z.object({
-    name: z.string().trim().min(1), // O nome do dia de treino deve ser em string e é obrigatório.
-    weekDay: z.enum(WeekDay), // O dia da semana deve ser um dos valores específicos.
-    isRest: z.boolean().default(false), // Indica se é um dia de descanso, por padrã é falso, depois o usuário informará se é descanso.
-    estimatedDurationInSeconds: z.number().int().min(1), // Por ora, vou colocar, mas não está no schema.prisma.
-    coverImageUrl: z.string().optional(), // A URL da imagem do dia de treino é opcional, mas se for fornecida, deve ser uma string.
-    exercises: z.array(WorkoutExerciseSchema) // A lista de exercícios deve ser um array de objetos que seguem o schema WorkoutExerciseSchema.    
-})
+  name: z.string().trim().min(1),
+  weekDay: z.enum(WeekDay),
+  isRest: z.boolean().default(false),
+  estimatedDurationInSeconds: z.number().min(1),
+  coverImageUrl: z.string().url().optional(),
+  exercises: z.array(WorkoutExerciseSchema),
+});
 
 export const WorkoutPlanSchema = z.object({
-    name: z.string().trim().min(1), // O nome do plano de treino deve ser em string e é obrigatório.
-    isActive: z.boolean().default(true), // Indica se o plano de treino está ativo, por padrão o projeto terá um plano de treino, por isso do true como padrão.   
-    workoutDays: z.array(WorkoutDaySchema) // A lista de dias de treino do plano.
-})
+  id: z.string().uuid(),
+  name: z.string().trim().min(1),
+  workoutDays: z.array(WorkoutDaySchema),
+});
 
-// Esse export serve para receber a requisição URL pelo usuário e verificar o workoutPlanID e workoutDayId para verificar o ID que estou recebendo para não corromper os dados
-// Entrada de dados sendo validada 
 export const WorkoutSessionParamsSchema = z.object({
-    workoutPlanId: z.string().uuid(), // O ID do plano de treino deve ser uma string no format UUID e é obrigatório.
-    workoutDayId: z.string().uuid() // o ID do dia de treino deve ser uma string no formato UUID e é obrigatório.
-})
+  workoutPlanId: z.string().uuid(),
+  workoutDayId: z.string().uuid(),
+});
 
-// Aqui estou validando o formato que app mobile vai receber o id da sessão do treino para poder referenciar nas próximas ações, como encerrar um treino, adicionar treino. 
-// Ou seja, basicamente API está retornando o ID de uma sessão de Treino do dia
-// Para que possa cronometrar, concluir o exercício
-// Saída de dados sendo validada
 export const WorkoutSessionResponseSchema = z.object({
-    id: z.string().uuid()
-})
+  id: z.string().uuid(),
+});
 
-// Aqui estou fazendo um schema para validar as mensagem de erros para fins de padronização
-export const ErrorSchema = z.object({
-    error: z.string().trim(),
-    code: z.string().trim() 
-})
+export const CompleteWorkoutSessionParamsSchema = z.object({
+  workoutPlanId: z.string().uuid(),
+  workoutDayId: z.string().uuid(),
+  sessionId: z.string().uuid(),
+});
+
+export const CompleteWorkoutSessionBodySchema = z.object({
+  completedAt: z.iso.datetime(),
+});
+
+export const CompleteWorkoutSessionResponseSchema = z.object({
+  id: z.string().uuid(),
+  startedAt: z.iso.datetime(),
+  completedAt: z.iso.datetime(),
+});
+
+export const UserTrainDataSchema = z.object({
+  userId: z.string(),
+  userName: z.string(),
+  weightInGrams: z.number(),
+  heightInCentimeters: z.number(),
+  age: z.number(),
+  bodyFatPercentage: z.number(),
+});
+
+export const GetWorkoutPlanParamsSchema = z.object({
+  id: z.string().uuid(),
+});
+
+export const GetWorkoutPlanResponseSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  workoutDays: z.array(
+    z.object({
+      id: z.string().uuid(),
+      weekDay: z.enum(WeekDay),
+      name: z.string(),
+      isRest: z.boolean(),
+      coverImageUrl: z.string().url().optional(),
+      estimatedDurationInSeconds: z.number(),
+      exercisesCount: z.number(),
+    }),
+  ),
+});
+
+export const GetWorkoutDayParamsSchema = z.object({
+  workoutPlanId: z.string().uuid(),
+  workoutDayId: z.string().uuid(),
+});
+
+export const GetWorkoutDayResponseSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  isRest: z.boolean(),
+  coverImageUrl: z.string().url().optional(),
+  estimatedDurationInSeconds: z.number(),
+  weekDay: z.enum(WeekDay),
+  exercises: z.array(
+    z.object({
+      id: z.string().uuid(),
+      name: z.string(),
+      order: z.number(),
+      workoutDayId: z.string().uuid(),
+      sets: z.number(),
+      reps: z.number(),
+      restTimeInSeconds: z.number(),
+    }),
+  ),
+  sessions: z.array(
+    z.object({
+      id: z.string().uuid(),
+      workoutDayId: z.string().uuid(),
+      startedAt: z.iso.date(),
+      completedAt: z.iso.date().optional(),
+    }),
+  ),
+});
+
+export const GetStatsQuerySchema = z.object({
+  from: z.iso.date(),
+  to: z.iso.date(),
+});
+
+export const GetStatsResponseSchema = z.object({
+  workoutStreak: z.number(),
+  consistencyByDay: z.record(
+    z.string(),
+    z.object({
+      workoutDayCompleted: z.boolean(),
+      workoutDayStarted: z.boolean(),
+    }),
+  ),
+  completedWorkoutsCount: z.number(),
+  conclusionRate: z.number(),
+  totalTimeInSeconds: z.number(),
+});
+
+export const GetHomeDataParamsSchema = z.object({
+  date: z.iso.date(),
+});
+
+export const GetHomeDataResponseSchema = z.object({
+  activeWorkoutPlanId: z.string().uuid().nullable(),
+  todayWorkoutDay: z
+    .object({
+      workoutPlanId: z.string().uuid(),
+      id: z.string().uuid(),
+      name: z.string(),
+      isRest: z.boolean(),
+      weekDay: z.enum(WeekDay),
+      estimatedDurationInSeconds: z.number(),
+      coverImageUrl: z.string().url().optional(),
+      exercisesCount: z.number(),
+    })
+    .nullable(),
+  workoutStreak: z.number(),
+  consistencyByDay: z.record(
+    z.string(),
+    z.object({
+      workoutDayCompleted: z.boolean(),
+      workoutDayStarted: z.boolean(),
+    }),
+  ),
+});

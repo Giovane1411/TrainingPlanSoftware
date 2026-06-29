@@ -52,10 +52,11 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  UserTrainData: 'UserTrainData',
   WorkoutPlan: 'WorkoutPlan',
   WorkoutDay: 'WorkoutDay',
-  WorkoutExercise: 'WorkoutExercise',
   WorkoutSession: 'WorkoutSession',
+  WorkoutExercise: 'WorkoutExercise',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -84,14 +85,23 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  weightInGrams: 'weightInGrams',
-  heightInCentimeters: 'heightInCentimeters',
-  age: 'age',
-  bodyFatPercentage: 'bodyFatPercentage'
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserTrainDataScalarFieldEnum = {
+  userId: 'userId',
+  weightInGrams: 'weightInGrams',
+  heightInCentimeters: 'heightInCentimeters',
+  age: 'age',
+  bodyFatPercentage: 'bodyFatPercentage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserTrainDataScalarFieldEnum = (typeof UserTrainDataScalarFieldEnum)[keyof typeof UserTrainDataScalarFieldEnum]
 
 
 export const WorkoutPlanScalarFieldEnum = {
@@ -121,6 +131,18 @@ export const WorkoutDayScalarFieldEnum = {
 export type WorkoutDayScalarFieldEnum = (typeof WorkoutDayScalarFieldEnum)[keyof typeof WorkoutDayScalarFieldEnum]
 
 
+export const WorkoutSessionScalarFieldEnum = {
+  id: 'id',
+  workoutDayId: 'workoutDayId',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkoutSessionScalarFieldEnum = (typeof WorkoutSessionScalarFieldEnum)[keyof typeof WorkoutSessionScalarFieldEnum]
+
+
 export const WorkoutExerciseScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -134,18 +156,6 @@ export const WorkoutExerciseScalarFieldEnum = {
 } as const
 
 export type WorkoutExerciseScalarFieldEnum = (typeof WorkoutExerciseScalarFieldEnum)[keyof typeof WorkoutExerciseScalarFieldEnum]
-
-
-export const WorkoutSessionScalarFieldEnum = {
-  id: 'id',
-  workoutDayId: 'workoutDayId',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type WorkoutSessionScalarFieldEnum = (typeof WorkoutSessionScalarFieldEnum)[keyof typeof WorkoutSessionScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {

@@ -9,10 +9,11 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.js'
+export type * from './models/UserTrainData.js'
 export type * from './models/WorkoutPlan.js'
 export type * from './models/WorkoutDay.js'
-export type * from './models/WorkoutExercise.js'
 export type * from './models/WorkoutSession.js'
+export type * from './models/WorkoutExercise.js'
 export type * from './models/Session.js'
 export type * from './models/Account.js'
 export type * from './models/Verification.js'
