@@ -13,6 +13,7 @@ export const userRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ["User"],
       summary: "Get the authenticated user's train data",
+      operationId: "getUserTrainData",
       response: {
         200: UserTrainDataSchema.nullable(),
         401: ErrorSchema,

@@ -32,6 +32,7 @@ export const workoutPlanRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ["Workout Plan"],
       summary: "Create a workout plan",
+      operationId: "createWorkoutPlan",
       body: WorkoutPlanSchema.omit({ id: true }),
       response: {
         201: WorkoutPlanSchema,
@@ -81,6 +82,7 @@ export const workoutPlanRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ["Workout Plan"],
       summary: "Get a workout plan",
+      operationId: "getWorkoutPlan",
       params: GetWorkoutPlanParamsSchema,
       response: {
         200: GetWorkoutPlanResponseSchema,
@@ -128,6 +130,7 @@ export const workoutPlanRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ["Workout Plan"],
       summary: "Get a workout day",
+      operationId: "getWorkoutDay",
       params: GetWorkoutDayParamsSchema,
       response: {
         200: GetWorkoutDayResponseSchema,
@@ -176,6 +179,7 @@ export const workoutPlanRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ["Workout Plan"],
       summary: "Start a workout session",
+      operationId: "startWorkoutSession",
       params: WorkoutSessionParamsSchema,
       response: {
         201: WorkoutSessionResponseSchema,
@@ -238,6 +242,7 @@ export const workoutPlanRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ["Workout Plan"],
       summary: "Update a workout session",
+      operationId: "completeWorkoutSession",
       params: CompleteWorkoutSessionParamsSchema,
       body: CompleteWorkoutSessionBodySchema,
       response: {

@@ -13,6 +13,7 @@ export const statsRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ["Stats"],
       summary: "Get the authenticated user's workout stats for a date range",
+      operationId: "getStats",
       querystring: GetStatsQuerySchema,
       response: {
         200: GetStatsResponseSchema,

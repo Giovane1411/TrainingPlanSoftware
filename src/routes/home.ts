@@ -13,6 +13,7 @@ export const homeRoutes = async (app: FastifyInstance) => {
     schema: {
       tags: ["Home"],
       summary: "Get the authenticated user's home page data",
+      operationId: "getHomeData",
       params: GetHomeDataParamsSchema,
       response: {
         200: GetHomeDataResponseSchema,
